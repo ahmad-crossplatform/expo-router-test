@@ -149,16 +149,13 @@ export const useFirebaseAuthentication = () => {
             password
         );
 
-        try {
+        await updateProfile(createUserResponse.user, {
+            displayName: firstName + " " + lastName,
 
-            if (auth?.currentUser)
-                await updateProfile(auth?.currentUser, {
-                    displayName: firstName + " " + lastName,
-                });
-        } catch (error) {
-            console.error("register: ", error);
-            throw error;
-        }
+
+        });
+
+
 
         return createUserResponse;
     };

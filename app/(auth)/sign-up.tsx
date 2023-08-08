@@ -3,6 +3,9 @@ import { View, TextInput, Button, StyleSheet } from "react-native";
 
 import { Link } from "expo-router";
 import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Input } from "./components/input";
+import { Navigation } from "./components/navigation";
 
 const SignupPage = () => {
   const { register } = useFirebaseAuthentication();
@@ -43,58 +46,52 @@ const SignupPage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.navigation}>
-        <Link href="/sign-in">Login</Link>
-
-        <Link style={{ fontWeight: "bold" }} href="/sign-up">
-          Register
-        </Link>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <Navigation />
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="First Name"
+        <Input
+          error=""
+          label="First Name"
           value={firstName}
           onChangeText={setFirstName}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Last Name"
+        <Input
+          error=""
+          label="Last Name"
           value={lastName}
           onChangeText={setLastName}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
+        <Input
+          error=""
+          label="Email"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Email"
+        <Input
+          error=""
+          label="Confirm Email"
           value={confirmEmail}
           onChangeText={setConfirmEmail}
           keyboardType="email-address"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
+        <Input
+          error=""
+          label="Password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
+        <Input
+          error=""
+          label="Confirm Password"
           secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
         <Button title="Sign Up" onPress={handleSignup} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -104,27 +101,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  navigation: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    width: "100%",
-    gap: 10,
-    marginLeft: 50,
-  },
+
   form: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-  },
-  input: {
-    width: "80%",
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingHorizontal: 10,
   },
 });
 

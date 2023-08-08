@@ -5,10 +5,13 @@ import {
   Button,
   StyleSheet,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 
 import { Link } from "expo-router";
 import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { Navigation } from "./components/navigation";
+import { Input } from "./components/input";
 
 const SigninPage = () => {
   const { login, isBusy } = useFirebaseAuthentication();
@@ -22,25 +25,19 @@ const SigninPage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.navigation}>
-        <Link style={{ fontWeight: "bold" }} href="/sign-in">
-          Login
-        </Link>
-
-        <Link href="/sign-up">Register</Link>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <Navigation />
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
+        <Input
+          error=""
+          label="Email"
           value={email}
           keyboardType="email-address"
           onChangeText={setEmail}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
+        <Input
+          error=""
+          label="Password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -48,23 +45,18 @@ const SigninPage = () => {
         <Button title="Sign In" onPress={handleSignin} />
         <ActivityIndicator animating={isBusy} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
   },
-  navigation: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    width: "100%",
-    gap: 10,
-    marginLeft: 50,
-  },
+
   form: {
     flex: 1,
     justifyContent: "center",
