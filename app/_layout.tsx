@@ -35,17 +35,18 @@ export default function RootLayout() {
 
   const segments = useSegments();
   useEffect(() => {
+    console.log("KEY", process.env.EXPO_PUBLIC_FIREBASE_APIKey);
     const firebaseConfig = {
-      apiKey: "AIzaSyBW6vu-m8Z3y28PziM3Xg1Tu-cKCQCYmn8",
-      authDomain: "wish2go-9d2c4.firebaseapp.com",
-      databaseURL: "https://wish2go-9d2c4.firebaseio.com",
-      projectId: "wish2go-9d2c4",
-      storageBucket: "wish2go-9d2c4.appspot.com",
-      messagingSenderId: "284980682582",
-      appId: "1:284980682582:web:70a6559420c45236a3c0f7",
-      measurementId: "G-N0SPHFH3P5",
+      apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKey,
+      authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTHDomain,
+      databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DatabaseURL,
+      projectId: process.env.EXPO_PUBLIC_FIREBASE_ProjectID,
+      storageBucket: process.env.EXPO_PUBLIC_FIREBASE_StorageBucket,
+      messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MessagingSenderID,
+      appId: process.env.EXPO_PUBLIC_FIREBASE_AppID,
+      measurementId: process.env.EXPO_PUBLIC_FIREBASE_MeasurementID,
     };
-
+    console.log("FIREBASE CONFIG", firebaseConfig);
     const app = initializeApp({ ...firebaseConfig });
 
     initializeFireBaseAuth(
