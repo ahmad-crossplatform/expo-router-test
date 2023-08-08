@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/native";
 import { initializeApp } from "firebase/app";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack, router, useSegments } from "expo-router";
+import { Slot, SplashScreen, Stack, router, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useFirebaseAuthentication } from "./hooks/useFirebaseAuthentication";
@@ -35,7 +35,6 @@ export default function RootLayout() {
 
   const segments = useSegments();
   useEffect(() => {
-    console.log("KEY", process.env.EXPO_PUBLIC_FIREBASE_APIKey);
     const firebaseConfig = {
       apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKey,
       authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTHDomain,
@@ -46,7 +45,6 @@ export default function RootLayout() {
       appId: process.env.EXPO_PUBLIC_FIREBASE_AppID,
       measurementId: process.env.EXPO_PUBLIC_FIREBASE_MeasurementID,
     };
-    console.log("FIREBASE CONFIG", firebaseConfig);
     const app = initializeApp({ ...firebaseConfig });
 
     initializeFireBaseAuth(
@@ -55,7 +53,7 @@ export default function RootLayout() {
         const inAuthGroup = segments[0] === "(auth)";
 
         if (inAuthGroup) router.replace("/(tabs)");
-        router.replace("/");
+        router.replace("/(tabs)");
         setIsFirebaseReady(true);
       },
       async () => {
@@ -88,10 +86,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
+      <Slot />
     </ThemeProvider>
   );
 }
