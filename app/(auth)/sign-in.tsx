@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 
-import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { useFirebaseAuthentication } from "../../hooks/useFirebaseAuthentication";
 import { Input } from "./components/input";
 import { Navigation } from "./components/navigation";
 

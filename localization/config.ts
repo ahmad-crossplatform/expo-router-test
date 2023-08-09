@@ -10,6 +10,7 @@ export const getLocale = async (): Promise<string> => {
   const result = locale.slice(0, 2);
 
   if (result === "ar") {
+    console.log("arabic");
     I18nManager.forceRTL(true);
   };
   return result;

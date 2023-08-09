@@ -24,14 +24,14 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="dashboard"
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="more"
+        name="more/index"
         options={{
           tabBarLabel: "More",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,

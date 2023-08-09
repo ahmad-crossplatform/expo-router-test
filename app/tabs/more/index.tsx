@@ -1,7 +1,7 @@
 import { Button, StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
-import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { useFirebaseAuthentication } from "@/hooks/useFirebaseAuthentication";
 
 export default function TabTwoScreen() {
   const { user, logout } = useFirebaseAuthentication();
