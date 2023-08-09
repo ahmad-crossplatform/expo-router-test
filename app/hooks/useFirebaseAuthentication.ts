@@ -69,7 +69,7 @@ export const useFirebaseAuthentication = () => {
 
 
     const initializeFireBaseAuth = (firebaseApp: FirebaseApp, onLoggedIn?: () => void, onLoggedOut?: () => void) => {
-        console.log("initializeFireBaseAuth");
+
         setIsBusy(true);
         try {
             const auth = getAuth(firebaseApp);
@@ -78,7 +78,7 @@ export const useFirebaseAuthentication = () => {
                 const res = initializeAuth(firebaseApp);
             }
             auth.onAuthStateChanged((user) => {
-                console.log("onAuthStateChanged");
+
                 setIsBusy(false);
                 if (user !== null && user !== undefined) {
                     setUser(user);
@@ -220,7 +220,7 @@ export const useFirebaseAuthentication = () => {
                         auth.currentUser,
                         EmailAuthProvider.credential(auth.currentUser.email, password)
                     );
-                    console.log("REAUTHENTICATION RESULT", credentialUser);
+
                     if (credentialUser) {
                         await deleteUser(auth.currentUser);
                         removeUserResult = true;

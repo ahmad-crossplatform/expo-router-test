@@ -1,3 +1,5 @@
+import { token } from "@/localization/appStructure";
+import { translate } from "@/localization/config";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -37,14 +39,14 @@ const SigninPage = () => {
           rules={{
             pattern: {
               value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-              message: "Please enter a valid email address",
+              message: translate(token.errors.emailFormat),
             },
-            required: "Required *",
+            required: translate(token.errors.required),
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               error={errors.email?.message || ""}
-              label="Email"
+              label={translate(token.common.email)}
               value={value}
               onBlur={onBlur}
               keyboardType="email-address"
@@ -57,17 +59,17 @@ const SigninPage = () => {
         <Controller
           control={control}
           rules={{
-            required: "Required *",
+            required: translate(token.errors.required),
 
             pattern: {
               value: /^.{6,}$/,
-              message: "Password must be at least 6 characters long",
+              message: translate(token.errors.passwordFormat),
             },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               error={errors.password?.message || ""}
-              label="Password"
+              label={translate(token.common.password)}
               value={value}
               onBlur={onBlur}
               secureTextEntry
@@ -77,7 +79,7 @@ const SigninPage = () => {
           )}
           name="password"
         />
-        <Button title="Sign In" onPress={onSubmit} />
+        <Button title={translate(token.common.login)} onPress={onSubmit} />
         <ActivityIndicator animating={isBusy} />
       </View>
     </SafeAreaView>

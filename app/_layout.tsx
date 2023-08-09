@@ -6,10 +6,18 @@ import {
 } from "@react-navigation/native";
 import { initializeApp } from "firebase/app";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack, router, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
+import {
+  Slot,
+  SplashScreen,
+  Stack,
+  router,
+  useSegments,
+  useRootNavigationState,
+} from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useColorScheme, I18nManager } from "react-native";
 import { useFirebaseAuthentication } from "./hooks/useFirebaseAuthentication";
+import { setI18nConfig } from "@/localization/config";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -29,33 +37,45 @@ export default function RootLayout() {
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
 
   const segments = useSegments();
+
+  // comvert rootNavigationState to useCallback
+  const rootNavigationState = useCallback(() => {
+    return useRootNavigationState();
+  }, []);
+
+  console.log("rootNavigationState", rootNavigationState()?.key);
+
   useEffect(() => {
-    const firebaseConfig = {
-      apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKey,
-      authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTHDomain,
-      databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DatabaseURL,
-      projectId: process.env.EXPO_PUBLIC_FIREBASE_ProjectID,
-      storageBucket: process.env.EXPO_PUBLIC_FIREBASE_StorageBucket,
-      messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MessagingSenderID,
-      appId: process.env.EXPO_PUBLIC_FIREBASE_AppID,
-      measurementId: process.env.EXPO_PUBLIC_FIREBASE_MeasurementID,
+    const init = async () => {
+      await setI18nConfig();
+      const firebaseConfig = {
+        apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKey,
+        authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTHDomain,
+        databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DatabaseURL,
+        projectId: process.env.EXPO_PUBLIC_FIREBASE_ProjectID,
+        storageBucket: process.env.EXPO_PUBLIC_FIREBASE_StorageBucket,
+        messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MessagingSenderID,
+        appId: process.env.EXPO_PUBLIC_FIREBASE_AppID,
+        measurementId: process.env.EXPO_PUBLIC_FIREBASE_MeasurementID,
+      };
+      const app = initializeApp({ ...firebaseConfig });
+
+      initializeFireBaseAuth(
+        app,
+        async () => {
+          const inAuthGroup = segments[0] === "(auth)";
+
+          if (inAuthGroup) router.replace("/(tabs)");
+          router.replace("/(tabs)");
+          setIsFirebaseReady(true);
+        },
+        async () => {
+          router.replace("/sign-in");
+          setIsFirebaseReady(true);
+        }
+      );
     };
-    const app = initializeApp({ ...firebaseConfig });
-
-    initializeFireBaseAuth(
-      app,
-      async () => {
-        const inAuthGroup = segments[0] === "(auth)";
-
-        if (inAuthGroup) router.replace("/(tabs)");
-        router.replace("/(tabs)");
-        setIsFirebaseReady(true);
-      },
-      async () => {
-        router.replace("/sign-in");
-        setIsFirebaseReady(true);
-      }
-    );
+    init();
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

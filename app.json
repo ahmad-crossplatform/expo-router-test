@@ -27,7 +27,10 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router"],
+    "extra": {
+      "supportsRTL": true
+    },
+    "plugins": ["expo-router", "expo-localization"],
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true

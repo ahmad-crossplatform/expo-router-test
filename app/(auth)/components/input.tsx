@@ -4,7 +4,7 @@ import {
   Text,
   View,
   StyleSheet,
-  KeyboardTypeOptions,
+  I18nManager,
   TextInputProps,
 } from "react-native";
 
@@ -15,9 +15,10 @@ interface InputProps extends TextInputProps {
 }
 
 export const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
+  // console.log(I18nManager.isRTL);
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label]}>{label}</Text>
       <TextInput
         style={[styles.input, error !== "" && styles.errorInput]}
         {...props}
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 5,
+    alignSelf: "flex-start",
     fontWeight: "bold",
   },
   input: {
@@ -41,13 +43,14 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
-
+    textAlign: I18nManager.isRTL ? "right" : "left",
     paddingHorizontal: 10,
   },
   errorInput: {
     borderColor: "red",
   },
   errorText: {
+    alignSelf: "flex-start",
     color: "red",
     marginTop: 5,
   },
