@@ -1,95 +1,174 @@
 import React from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
-
-import { Link } from "expo-router";
-import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { Controller, useForm } from "react-hook-form";
+import { Button, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
 import { Input } from "./components/input";
 import { Navigation } from "./components/navigation";
 
 const SignupPage = () => {
   const { register } = useFirebaseAuthentication();
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [confirmEmail, setConfirmEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
 
-  const handleSignup = () => {
-    // Perform signup logic here
-    if (!firstName || !lastName) {
-      console.log("Please enter your full name");
-      return;
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      confirmEmail: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = handleSubmit(
+    async ({ firstName, lastName, email, password }) => {
+      await register(firstName, lastName, email, password);
     }
-
-    if (!email || email !== confirmEmail) {
-      console.log(
-        "Please enter a valid email address and confirm it correctly"
-      );
-      return;
-    }
-
-    if (!password || password !== confirmPassword) {
-      console.log("Please enter a valid password and confirm it correctly");
-      return;
-    }
-
-    console.log("Signing up with:", {
-      firstName,
-      lastName,
-      email,
-      password,
-    });
-
-    register(firstName, lastName, email, password);
-  };
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <Navigation />
       <View style={styles.form}>
-        <Input
-          error=""
-          label="First Name"
-          value={firstName}
-          onChangeText={setFirstName}
+        <Controller
+          control={control}
+          rules={{
+            required: "Required *",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.firstName?.message || ""}
+              label="First Name"
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
+          name="firstName"
         />
-        <Input
-          error=""
-          label="Last Name"
-          value={lastName}
-          onChangeText={setLastName}
+        <Controller
+          control={control}
+          rules={{
+            required: "Required *",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.lastName?.message || ""}
+              label="Last Name"
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
+          name="lastName"
         />
-        <Input
-          error=""
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+
+        <Controller
+          control={control}
+          rules={{
+            pattern: {
+              value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+              message: "Please enter a valid email address",
+            },
+            required: "Required *",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.email?.message || ""}
+              label="Email"
+              value={value}
+              onBlur={onBlur}
+              keyboardType="email-address"
+              onChangeText={onChange}
+            />
+          )}
+          name="email"
         />
-        <Input
-          error=""
-          label="Confirm Email"
-          value={confirmEmail}
-          onChangeText={setConfirmEmail}
-          keyboardType="email-address"
+        <Controller
+          control={control}
+          rules={{
+            validate: {
+              emailMatch: (value) => {
+                const { email } = getValues();
+
+                return (
+                  value.trim().toLowerCase() === email.trim().toLowerCase() ||
+                  "Emails do not match"
+                );
+              },
+            },
+            required: "Required *",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.confirmEmail?.message || ""}
+              label="Confirm Email"
+              value={value}
+              onBlur={onBlur}
+              keyboardType="email-address"
+              onChangeText={onChange}
+            />
+          )}
+          name="confirmEmail"
         />
-        <Input
-          error=""
-          label="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+        <Controller
+          control={control}
+          rules={{
+            required: "Required *",
+
+            pattern: {
+              value: /^.{6,}$/,
+              message: "Password must be at least 6 characters long",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.password?.message || ""}
+              label="Password"
+              value={value}
+              onBlur={onBlur}
+              secureTextEntry
+              keyboardType="default"
+              onChangeText={onChange}
+            />
+          )}
+          name="password"
         />
-        <Input
-          error=""
-          label="Confirm Password"
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+        <Controller
+          control={control}
+          rules={{
+            required: "Required *",
+            validate: {
+              passwordMatch: (value) => {
+                const { password } = getValues();
+                return value === password || "Passwords do not match";
+              },
+            },
+            pattern: {
+              value: /^.{6,}$/,
+              message: "Password must be at least 6 characters long",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.confirmPassword?.message || ""}
+              label="Confirm Password"
+              value={value}
+              onBlur={onBlur}
+              secureTextEntry
+              keyboardType="default"
+              onChangeText={onChange}
+            />
+          )}
+          name="confirmPassword"
         />
-        <Button title="Sign Up" onPress={handleSignup} />
+        <Button title="Sign Up" onPress={onSubmit} />
       </View>
     </SafeAreaView>
   );
