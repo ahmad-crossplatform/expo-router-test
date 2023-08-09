@@ -16,7 +16,7 @@ import {
 } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useColorScheme, I18nManager } from "react-native";
-import { useFirebaseAuthentication } from "./hooks/useFirebaseAuthentication";
+import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
 import { setI18nConfig } from "@/localization/config";
 
 export {
@@ -65,8 +65,8 @@ export default function RootLayout() {
         async () => {
           const inAuthGroup = segments[0] === "(auth)";
 
-          if (inAuthGroup) router.replace("/(tabs)");
-          router.replace("/(tabs)");
+          if (inAuthGroup) router.replace("/tabs");
+          router.replace("/tabs");
           setIsFirebaseReady(true);
         },
         async () => {

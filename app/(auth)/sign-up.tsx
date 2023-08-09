@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
+import { useFirebaseAuthentication } from "../../hooks/useFirebaseAuthentication";
 import { Input } from "./components/input";
 import { Navigation } from "./components/navigation";
 
