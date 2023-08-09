@@ -1,48 +1,83 @@
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
   ActivityIndicator,
+  Button,
   SafeAreaView,
+  StyleSheet,
+  View,
 } from "react-native";
 
-import { Link } from "expo-router";
 import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
-import { Navigation } from "./components/navigation";
 import { Input } from "./components/input";
+import { Navigation } from "./components/navigation";
 
 const SigninPage = () => {
   const { login, isBusy } = useFirebaseAuthentication();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSignin = () => {
-    // Perform signin logic here
-    console.log("Signing in with email:", email, "and password:", password);
+  const onSubmit = handleSubmit(({ email, password }) => {
     login(email, password);
-  };
-
+  });
   return (
     <SafeAreaView style={styles.container}>
       <Navigation />
       <View style={styles.form}>
-        <Input
-          error=""
-          label="Email"
-          value={email}
-          keyboardType="email-address"
-          onChangeText={setEmail}
+        <Controller
+          control={control}
+          rules={{
+            pattern: {
+              value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+              message: "Please enter a valid email address",
+            },
+            required: "Required *",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.email?.message || ""}
+              label="Email"
+              value={value}
+              onBlur={onBlur}
+              keyboardType="email-address"
+              onChangeText={onChange}
+            />
+          )}
+          name="email"
         />
-        <Input
-          error=""
-          label="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+
+        <Controller
+          control={control}
+          rules={{
+            required: "Required *",
+
+            pattern: {
+              value: /^.{6,}$/,
+              message: "Password must be at least 6 characters long",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              error={errors.password?.message || ""}
+              label="Password"
+              value={value}
+              onBlur={onBlur}
+              secureTextEntry
+              keyboardType="default"
+              onChangeText={onChange}
+            />
+          )}
+          name="password"
         />
-        <Button title="Sign In" onPress={handleSignin} />
+        <Button title="Sign In" onPress={onSubmit} />
         <ActivityIndicator animating={isBusy} />
       </View>
     </SafeAreaView>

@@ -5,34 +5,22 @@ import {
   View,
   StyleSheet,
   KeyboardTypeOptions,
+  TextInputProps,
 } from "react-native";
 
-interface InputProps {
+interface InputProps extends TextInputProps {
   label: string;
-  value: string;
-  onChangeText: (text: string) => void;
+
   error: string;
-  secureTextEntry?: boolean;
-  keyboardType?: KeyboardTypeOptions | undefined;
 }
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  value,
-  onChangeText,
-  error,
-  secureTextEntry,
-  keyboardType,
-}) => {
+export const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={[styles.input, error !== "" && styles.errorInput]}
-        value={value}
-        secureTextEntry={secureTextEntry}
-        onChangeText={onChangeText}
-        keyboardType={keyboardType}
+        {...props}
       />
       {error && error !== "" && <Text style={styles.errorText}>{error}</Text>}
     </View>
