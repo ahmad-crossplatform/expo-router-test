@@ -63,6 +63,7 @@ export const useFirebaseAuthentication = () => {
 
     const [username, setUsername] = useAtom(usernameAtom);
     const [password, setPassword] = useAtom(passwordAtom);
+
     const [isBusy, setIsBusy] = useState(false);
 
 
@@ -145,7 +146,7 @@ export const useFirebaseAuthentication = () => {
 
         const createUserResponse = await createUserWithEmailAndPassword(
             getAuth(),
-            email.trim().toLowerCase(),
+            email,
             password
         );
 
