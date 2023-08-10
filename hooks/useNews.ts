@@ -18,6 +18,13 @@ const useNewsPosts = () => {
     const [error, setError] = useState<string | null>(null);
     const [period] = useAtom(periodAtom)
     const [sortType] = useAtom(sortAtom)
+
+    useEffect(() => {
+        setFoundPosts(newsPosts);
+    }, [newsPosts])
+
+
+    console.log('useNewsPosts', newsPosts.length);
     const fetchNewsPosts = async () => {
         setIsLoading(true);
         try {

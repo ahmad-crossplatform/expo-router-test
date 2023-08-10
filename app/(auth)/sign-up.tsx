@@ -21,10 +21,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFirebaseAuthentication } from "../../hooks/useFirebaseAuthentication";
 import { Input } from "./components/input";
 import { Navigation } from "./components/navigation";
+import { useProfile } from "@/hooks/useProfile";
 
 const SignupPage = () => {
   const { register } = useFirebaseAuthentication();
-
+  const { saveProfile } = useProfile();
   const {
     control,
     handleSubmit,
@@ -47,7 +48,22 @@ const SignupPage = () => {
 
   const onSubmit = handleSubmit(
     async ({ firstName, lastName, email, password }) => {
-      await register(firstName, lastName, email, password);
+      const credentials = await register(
+        firstName,
+        lastName,
+        email.trim().toLowerCase(),
+        password
+      );
+      if (credentials?.user) {
+        await saveProfile({
+          firstName,
+          lastName,
+          email: email.trim().toLowerCase(),
+          phoneNumber: getValues("phoneNumber"),
+          socialSecurityNumber: getValues("nationalId"),
+          dateOfBirth: getValues("dateOfBirth"),
+        });
+      }
     }
   );
   /*
@@ -231,6 +247,7 @@ const SignupPage = () => {
                   error={errors.email?.message || ""}
                   label={translate(token.common.email)}
                   value={value}
+                  autoCapitalize="none"
                   onBlur={onBlur}
                   keyboardType="email-address"
                   onChangeText={onChange}
@@ -259,6 +276,7 @@ const SignupPage = () => {
                   error={errors.confirmEmail?.message || ""}
                   label={translate(token.screens.registerScreen.confirmEmail)}
                   value={value}
+                  autoCapitalize="none"
                   onBlur={onBlur}
                   keyboardType="email-address"
                   onChangeText={onChange}
@@ -282,6 +300,7 @@ const SignupPage = () => {
                   label={translate(token.common.password)}
                   value={value}
                   onBlur={onBlur}
+                  autoCapitalize="none"
                   secureTextEntry
                   keyboardType="default"
                   onChangeText={onChange}
@@ -314,6 +333,7 @@ const SignupPage = () => {
                     token.screens.registerScreen.confirmPassword
                   )}
                   value={value}
+                  autoCapitalize="none"
                   onBlur={onBlur}
                   secureTextEntry
                   keyboardType="default"

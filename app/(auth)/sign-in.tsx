@@ -72,6 +72,7 @@ const SigninPage = () => {
               label={translate(token.common.password)}
               value={value}
               onBlur={onBlur}
+              autoCapitalize="none"
               secureTextEntry
               keyboardType="default"
               onChangeText={onChange}
