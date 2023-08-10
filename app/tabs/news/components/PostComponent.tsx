@@ -1,10 +1,19 @@
 import { INewsPost } from "@/types/INewsPost";
-import moment from "moment";
+import { Link } from "expo-router";
+
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-export const PostComponent: React.FC<{ post: INewsPost }> = ({ post }) => {
+interface IPostComponentProps {
+  post: INewsPost;
+  onClick: (id: number) => void;
+}
+export const PostComponent: React.FC<IPostComponentProps> = ({
+  post,
+  onClick,
+}) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => onClick(post.id)}>
+      <Text style={styles.section}>{post.section}</Text>
       <View style={styles.container}>
         {post.media[0]?.["media-metadata"]?.[0].url && (
           <View style={styles.imageContainer}>
@@ -23,15 +32,6 @@ export const PostComponent: React.FC<{ post: INewsPost }> = ({ post }) => {
           <Text style={styles.title}>{post.title}</Text>
         </View>
       </View>
-      {/* <View style={styles.date}>
-        <Text>{`${
-          moment().diff(post.updated, "days") == 0
-            ? "Today"
-            : moment().diff(post.updated, "days") == 1
-            ? "Yesterday"
-            : moment().diff(post.updated, "days") + " days ago"
-        }`}</Text>
-      </View> */}
     </TouchableOpacity>
   );
 };
@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginHorizontal: 10,
     marginVertical: 3,
+    gap: 3,
+  },
+  section: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#000000",
+    marginBottom: 10,
+    backgroundColor: "#f2f2f2",
+
+    padding: 5,
+    borderRadius: 5,
+    alignSelf: "flex-start",
   },
   container: {
     flexDirection: "row",

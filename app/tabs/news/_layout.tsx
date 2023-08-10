@@ -156,7 +156,10 @@ export default function Layout() {
         }}
       />
 
-      <Stack.Screen name="newsDetails" options={{ title: "News Details" }} />
+      <Stack.Screen
+        name="[slug]"
+        options={{ title: "News Details", headerBackTitle: "Back" }}
+      />
     </Stack>
   );
 }
