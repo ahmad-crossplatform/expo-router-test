@@ -13,11 +13,13 @@ import {
   router,
   useSegments,
   useRootNavigationState,
+  usePathname,
 } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useColorScheme, I18nManager } from "react-native";
 import { useFirebaseAuthentication } from "../hooks/useFirebaseAuthentication";
 import { setI18nConfig } from "@/localization/config";
+import { useTraceUpdate } from "@/hooks/useTraceUpdate";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -29,6 +31,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { initializeFireBaseAuth } = useFirebaseAuthentication();
+  const path = usePathname();
+  console.log(path);
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
@@ -38,12 +42,9 @@ export default function RootLayout() {
 
   const segments = useSegments();
 
-  // comvert rootNavigationState to useCallback
   const rootNavigationState = useCallback(() => {
     return useRootNavigationState();
   }, []);
-
-  console.log("rootNavigationState", rootNavigationState()?.key);
 
   useEffect(() => {
     const init = async () => {

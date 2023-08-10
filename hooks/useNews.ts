@@ -1,4 +1,5 @@
 import { SortType, periodAtom, sortAtom } from '@/atoms/filterAtoms';
+import { newsPostsAtom } from '@/atoms/newsAtoms';
 import { INewsPost } from '@/types/INewsPost';
 import { IRequestResult } from '@/types/IRequestResult';
 import { useAtom } from 'jotai';
@@ -11,7 +12,7 @@ interface GroupUnit {
 }
 
 const useNewsPosts = () => {
-    const [newsPosts, setNewsPosts] = useState<INewsPost[]>([]);
+    const [newsPosts, setNewsPosts] = useAtom(newsPostsAtom);
     const [foundPosts, setFoundPosts] = useState<INewsPost[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -24,11 +25,15 @@ const useNewsPosts = () => {
                 `https://api.nytimes.com/svc/mostpopular/v2/viewed/${period}.json?api-key=${process.env.EXPO_PUBLIC_NEWS_API_KEY}`
             );
             if (!response.ok) {
+                console.log('Failed to fetch news posts');
                 throw new Error('Failed to fetch news posts');
             }
-            const data: IRequestResult = await response.json();
-            setNewsPosts(data.results);
-            setFoundPosts(data.results);
+            else {
+                const data: IRequestResult = await response.json();
+                console.log(data.results.length);
+                setNewsPosts(data.results);
+                setFoundPosts(data.results);
+            }
         } catch (error: any) {
             setError(error.message);
         }
@@ -47,7 +52,9 @@ const useNewsPosts = () => {
         sort();
     }, [sortType])
 
-
+    const getNewsPostById = (id: number) => {
+        return newsPosts.find((post) => post.id === id);
+    };
 
     const refreshNewsPosts = async () => {
         await fetchNewsPosts();
@@ -100,7 +107,7 @@ const useNewsPosts = () => {
             return post.title.toLowerCase().includes(searchText.toLowerCase());
         }))
     }
-    return { foundPosts, isLoading, error, refreshNewsPosts, groupByPublishedDate, convertToGroupUnit, search, sort };
+    return { foundPosts, isLoading, error, refreshNewsPosts, groupByPublishedDate, convertToGroupUnit, search, sort, getNewsPostById };
 };
 
 export default useNewsPosts;

@@ -11,6 +11,8 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 
 import { PostComponent } from "./components/PostComponent";
+import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRouter } from "expo-router";
 
 const HomePage: React.FC = () => {
   const {
@@ -22,7 +24,7 @@ const HomePage: React.FC = () => {
   } = useNewsPosts();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
-
+  const router = useRouter();
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refreshNewsPosts();
@@ -55,7 +57,11 @@ const HomePage: React.FC = () => {
       <SectionList
         sections={convertToGroupUnit(groupByPublishedDate())}
         renderItem={({ item }) => (
-          <PostComponent post={item} key={item.id.toString()} />
+          <PostComponent
+            post={item}
+            key={item.id.toString()}
+            onClick={(id) => router.push(`/tabs/news/${id}`)}
+          />
         )}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
@@ -72,7 +78,6 @@ const HomePage: React.FC = () => {
         ListEmptyComponent={() => {
           return (
             <View style={styles.emptyList}>
-              {isLoading && <Text>Loading...</Text>}
               {!isLoading && <Text>No news posts found</Text>}
             </View>
           );
