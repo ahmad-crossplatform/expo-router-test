@@ -16,6 +16,23 @@ To clone the project repository, follow these steps:
 
 4. After running the command, the repository will be cloned to your local machine.
 
+5. Create a `.env` file and make sure it contains the following variables
+
+```
+EXPO_PUBLIC_FIREBASE_APIKey=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_AUTHDomain=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_DatabaseURL=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_ProjectID=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_StorageBucket=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_MessagingSenderID=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_AppID=##YOURKEY##
+EXPO_PUBLIC_FIREBASE_MeasurementID=##YOURKEY##
+
+EXPO_PUBLIC_NEWS_API_KEY=##YOURKEY##
+```
+
+6. Replace `##YOURKEY` with the actual key for your APIs. Make sure to write them _WITHOUT double quotations""_ .
+
 ## Install Dependencies
 
 Before testing the app, make sure to install the required dependencies. Follow these steps:
